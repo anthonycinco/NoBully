@@ -6,7 +6,7 @@ import TextInput from '@/components/TextInput'
 import ImageUpload from '@/components/ImageUpload'
 import ResultsPanel from '@/components/ResultsPanel'
 import { AnalysisResult } from '@/types'
-import Tesseract from 'tesseract.js'
+import { extractTextFromImage } from '@/lib/ocr'
 
 // Simple keyword detection system
 const BULLYING_KEYWORDS = {
@@ -99,12 +99,8 @@ export default function Home() {
   const handleImageAnalysis = async (imageFile: File) => {
     setIsAnalyzing(true)
     try {
-      // Use Tesseract.js for OCR
-      const result = await Tesseract.recognize(imageFile, 'eng', {
-        logger: m => console.log(m)
-      })
-      
-      const extractedText = result.data.text.trim()
+      // Use fast OCR (Google Cloud Vision API simulation)
+      const extractedText = await extractTextFromImage(imageFile)
       setExtractedText(extractedText)
       
       if (extractedText) {
